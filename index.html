@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mippedia - Ensiklopedia Pengetahuan Umum Terbuka & Kolaboratif</title>
+    <meta name="description" content="Mippedia adalah ensiklopedia umum berbasis kolaborasi yang menyajikan informasi rujukan dari berbagai topik, dikelola oleh komunitas secara independen.">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="font-bold text-xl tracking-tight text-indigo-600">Mippedia</span>
+                <span class="text-xs px-2 py-0.5 bg-indigo-50 text-indigo-600 font-medium rounded-full">Portal</span>
+            </div>
+            <nav class="flex items-center space-x-6 text-sm font-medium text-slate-600">
+                <a href="#tentang" class="hover:text-indigo-600 transition">Tentang</a>
+                <a href="#prinsip" class="hover:text-indigo-600 transition">Prinsip</a>
+                <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition shadow-sm">Kunjungi Situs Utama &rarr;</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 py-12 space-y-16">
+
+        <!-- Hero Section -->
+        <section class="text-center space-y-6 pt-8">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200/60 text-slate-600 text-xs font-medium">
+                <span>Inisiatif Pengetahuan Terbuka</span>
+                <span>&bull;</span>
+                <span>Est. 2025</span>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                Pusat Referensi Pengetahuan & Kolaborasi Publik
+            </h1>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                Mippedia adalah ensiklopedia umum yang dikembangkan sebagai sumber rujukan berbasis komunitas, transparan, dan terbuka untuk siapa saja yang ingin berkontribusi.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 pt-4">
+                <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl shadow-md transition">
+                    Akses Ensiklopedia Mippedia
+                </a>
+                <a href="#tentang" class="px-6 py-3 bg-white hover:bg-slate-100 text-slate-700 font-medium rounded-xl border border-slate-300 transition">
+                    Pelajari Proyek Ini
+                </a>
+            </div>
+        </section>
+
+        <!-- Tentang Mippedia -->
+        <section id="tentang" class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm space-y-6">
+            <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-100 pb-4">Tentang Proyek Mippedia</h2>
+            <div class="space-y-4 text-slate-600 leading-relaxed">
+                <p>
+                    <strong>Mippedia</strong> merupakan ensiklopedia umum daring yang memuat artikel pengetahuan dari berbagai macam topik lintas disiplin. Proyek ini diluncurkan pertama kali dalam versi bahasa Indonesia pada <strong>5 Desember 2025</strong>, diikuti dengan peluncuran versi bahasa Inggris pada <strong>13 Januari 2026</strong>.
+                </p>
+                <p>
+                    Situs ini dibangun menggunakan perangkat lunak wiki, memberikan keleluasaan bagi para kontributor di seluruh dunia untuk menyunting, membuat, memperbaiki, dan memperbarui isi artikel secara kolektif.
+                </p>
+                <div class="grid grid-sm sm:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <span class="block text-xs font-semibold text-indigo-600 uppercase tracking-wider">Pencipta</span>
+                        <span class="text-slate-800 font-medium">Rumi Haitami</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <span class="block text-xs font-semibold text-indigo-600 uppercase tracking-wider">Pengelola</span>
+                        <span class="text-slate-800 font-medium">Mippedia Community</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prinsip Redaksional -->
+        <section id="prinsip" class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm space-y-6">
+            <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-100 pb-4">Standar & Prinsip Rujukan</h2>
+            <div class="space-y-4 text-slate-600 leading-relaxed">
+                <p>
+                    Sebagai platform ensiklopedia modern, Mippedia dikembangkan dengan prinsip verifikasi yang ketat guna menjaga kualitas informasi bagi pembaca:
+                </p>
+                <ul class="space-y-3 pl-2">
+                    <li class="flex items-start space-x-3">
+                        <span class="text-indigo-600 font-bold">&check;</span>
+                        <span><strong>Berbasis Rujukan Valid:</strong> Setiap artikel yang dimuat harus bersumber dari topik dan informasi yang telah dipublikasikan sebelumnya di media berita atau publikasi kredibel (seperti Kompas dan media besar lainnya).</span>
+                    </li>
+                    <li class="flex items-start space-x-3">
+                        <span class="text-indigo-600 font-bold">&check;</span>
+                        <span><strong>Proses Kurasi:</strong> Seluruh artikel melalui tahap kurasi terlebih dahulu sebelum diterbitkan guna meminimalisir kesalahan dan kelalaian informasi.</span>
+                    </li>
+                    <li class="flex items-start space-x-3">
+                        <span class="text-indigo-600 font-bold">&check;</span>
+                        <span><strong>Bukan Kebenaran Mutlak:</strong> Mippedia tidak dimaksudkan sebagai pernyataan kebenaran mutlak, pengganti sumber primer, publikasi ilmiah, nasihat profesional, ataupun keputusan final atas suatu topik.</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Edisi & Akses Utama -->
+        <section class="bg-gradient-to-br from-indigo-900 to-slate-900 rounded-2xl p-8 text-white space-y-6 shadow-xl">
+            <div class="max-w-xl space-y-2">
+                <h2 class="text-2xl font-bold">Jelajahi Jaringan Ensiklopedia</h2>
+                <p class="text-indigo-200 text-sm">
+                    Temukan berbagai artikel terkurasi dalam berbagai bahasa atau akses repositori data terbuka kami.
+                </p>
+            </div>
+            <div class="flex flex-wrap gap-4 pt-2">
+                <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="px-5 py-3 bg-white text-indigo-950 font-semibold rounded-xl hover:bg-indigo-50 transition text-sm">
+                    Situs Utama Mippedia
+                </a>
+                <a href="https://data.mippedia.org" target="_blank" rel="noopener noreferrer" class="px-5 py-3 bg-indigo-800/60 hover:bg-indigo-800 text-white font-semibold rounded-xl border border-indigo-700 transition text-sm">
+                    Repositori Data (data.mippedia.org)
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-4xl mx-auto px-6 py-12 mt-12 border-t border-slate-200 text-center text-sm text-slate-500 space-y-3">
+        <p>&copy; 2025–2026 Mippedia Community. Hak cipta dilindungi undang-undang.</p>
+        <p>
+            Portal dokumentasi resmi ini dihosting melalui <a href="https://pages.github.com" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-700">GitHub Pages</a>.
+        </p>
+    </footer>
+
+</body>
+</html>
