@@ -3,133 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mippedia - Ensiklopedia Pengetahuan Umum Terbuka & Kolaboratif</title>
-    <meta name="description" content="Mippedia adalah ensiklopedia umum berbasis kolaborasi yang menyajikan informasi rujukan dari berbagai topik, dikelola oleh komunitas secara independen.">
+    <title>Mippedia - Portal Dokumentasi & Yayasan Pengetahuan Terbuka</title>
+    <meta name="description" content="Dokumentasi resmi, prinsip redaksional, standar verifikasi, dan arsip proyek ensiklopedia terbuka Mippedia yang dikelola oleh komunitas independen.">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js untuk Interaktivitas Tab & Search -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        .prose-content { font-family: 'Merriweather', serif; line-height: 1.8; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-indigo-600 selection:text-white" x-data="{ currentTab: 'overview', searchQuery: '', mobileMenu: false }">
 
-    <!-- Header / Navbar -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-slate-200">
-        <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <span class="font-bold text-xl tracking-tight text-indigo-600">Mippedia</span>
-                <span class="text-xs px-2 py-0.5 bg-indigo-50 text-indigo-600 font-medium rounded-full">Portal</span>
+    <!-- Top Announcement Bar -->
+    <div class="bg-indigo-900 text-indigo-100 text-xs py-2 px-4 text-center font-medium">
+        <span>Inisiatif Pengetahuan Terbuka &bull; Versi ID diluncurkan 5 Desember 2025 &bull; Versi EN diluncurkan 13 Januari 2026</span>
+        <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="underline ml-2 text-white font-semibold hover:text-indigo-200">Kunjungi mippedia.org &rarr;</a>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="#overview" @click="currentTab = 'overview'" class="flex items-center space-x-2">
+                    <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-sm">M</div>
+                    <div>
+                        <span class="font-bold text-lg tracking-tight text-slate-900 block leading-tight">Mippedia</span>
+                        <span class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Documentation Portal</span>
+                    </div>
+                </a>
             </div>
-            <nav class="flex items-center space-x-6 text-sm font-medium text-slate-600">
-                <a href="#tentang" class="hover:text-indigo-600 transition">Tentang</a>
-                <a href="#prinsip" class="hover:text-indigo-600 transition">Prinsip</a>
-                <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition shadow-sm">Kunjungi Situs Utama &rarr;</a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-1 text-sm font-medium text-slate-600">
+                <button @click="currentTab = 'overview'" :class="currentTab === 'overview' ? 'text-indigo-600 bg-indigo-50/80' : 'hover:text-indigo-600 hover:bg-slate-50'" class="px-3 py-2 rounded-lg transition">Beranda</button>
+                <button @click="currentTab = 'history'" :class="currentTab === 'history' ? 'text-indigo-600 bg-indigo-50/80' : 'hover:text-indigo-600 hover:bg-slate-50'" class="px-3 py-2 rounded-lg transition">Sejarah & Latar Belakang</button>
+                <button @click="currentTab = 'editorial'" :class="currentTab === 'editorial' ? 'text-indigo-600 bg-indigo-50/80' : 'hover:text-indigo-600 hover:bg-slate-50'" class="px-3 py-2 rounded-lg transition">Standar Redaksi</button>
+                <button @click="currentTab = 'governance'" :class="currentTab === 'governance' ? 'text-indigo-600 bg-indigo-50/80' : 'hover:text-indigo-600 hover:bg-slate-50'" class="px-3 py-2 rounded-lg transition">Komunitas & Tata Kelola</button>
+                <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="ml-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition shadow-sm">Situs Utama &rarr;</a>
             </nav>
+
+            <!-- Mobile Menu Button -->
+            <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div x-show="mobileMenu" class="md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1">
+            <button @click="currentTab = 'overview'; mobileMenu = false" class="block w-full text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Beranda</button>
+            <button @click="currentTab = 'history'; mobileMenu = false" class="block w-full text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Sejarah & Latar Belakang</button>
+            <button @click="currentTab = 'editorial'; mobileMenu = false" class="block w-full text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Standar Redaksi</button>
+            <button @click="currentTab = 'governance'; mobileMenu = false" class="block w-full text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Komunitas & Tata Kelola</button>
+            <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="block px-3 py-2 text-indigo-600 font-semibold">Buka Mippedia.org &rarr;</a>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-6 py-12 space-y-16">
-
-        <!-- Hero Section -->
-        <section class="text-center space-y-6 pt-8">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200/60 text-slate-600 text-xs font-medium">
-                <span>Inisiatif Pengetahuan Terbuka</span>
-                <span>&bull;</span>
-                <span>Est. 2025</span>
-            </div>
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                Pusat Referensi Pengetahuan & Kolaborasi Publik
-            </h1>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                Mippedia adalah ensiklopedia umum yang dikembangkan sebagai sumber rujukan berbasis komunitas, transparan, dan terbuka untuk siapa saja yang ingin berkontribusi.
-            </p>
-            <div class="flex flex-wrap justify-center gap-4 pt-4">
-                <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl shadow-md transition">
-                    Akses Ensiklopedia Mippedia
-                </a>
-                <a href="#tentang" class="px-6 py-3 bg-white hover:bg-slate-100 text-slate-700 font-medium rounded-xl border border-slate-300 transition">
-                    Pelajari Proyek Ini
-                </a>
-            </div>
-        </section>
-
-        <!-- Tentang Mippedia -->
-        <section id="tentang" class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm space-y-6">
-            <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-100 pb-4">Tentang Proyek Mippedia</h2>
-            <div class="space-y-4 text-slate-600 leading-relaxed">
-                <p>
-                    <strong>Mippedia</strong> merupakan ensiklopedia umum daring yang memuat artikel pengetahuan dari berbagai macam topik lintas disiplin. Proyek ini diluncurkan pertama kali dalam versi bahasa Indonesia pada <strong>5 Desember 2025</strong>, diikuti dengan peluncuran versi bahasa Inggris pada <strong>13 Januari 2026</strong>.
-                </p>
-                <p>
-                    Situs ini dibangun menggunakan perangkat lunak wiki, memberikan keleluasaan bagi para kontributor di seluruh dunia untuk menyunting, membuat, memperbaiki, dan memperbarui isi artikel secara kolektif.
-                </p>
-                <div class="grid grid-sm sm:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <span class="block text-xs font-semibold text-indigo-600 uppercase tracking-wider">Pencipta</span>
-                        <span class="text-slate-800 font-medium">Rumi Haitami</span>
-                    </div>
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <span class="block text-xs font-semibold text-indigo-600 uppercase tracking-wider">Pengelola</span>
-                        <span class="text-slate-800 font-medium">Mippedia Community</span>
+    <!-- Main App Layout with Sidebar & Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            
+            <!-- Sidebar Navigation (12 Halaman Dokumen) -->
+            <aside class="lg:col-span-1 space-y-6">
+                <!-- Search Box -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">Cari Topik Dokumentasi</label>
+                    <div class="relative">
+                        <input type="text" x-model="searchQuery" placeholder="Cari kebijakan, aturan..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- Prinsip Redaksional -->
-        <section id="prinsip" class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm space-y-6">
-            <h2 class="text-2xl font-bold text-slate-900 border-b border-slate-100 pb-4">Standar & Prinsip Rujukan</h2>
-            <div class="space-y-4 text-slate-600 leading-relaxed">
-                <p>
-                    Sebagai platform ensiklopedia modern, Mippedia dikembangkan dengan prinsip verifikasi yang ketat guna menjaga kualitas informasi bagi pembaca:
-                </p>
-                <ul class="space-y-3 pl-2">
-                    <li class="flex items-start space-x-3">
-                        <span class="text-indigo-600 font-bold">&check;</span>
-                        <span><strong>Berbasis Rujukan Valid:</strong> Setiap artikel yang dimuat harus bersumber dari topik dan informasi yang telah dipublikasikan sebelumnya di media berita atau publikasi kredibel (seperti Kompas dan media besar lainnya).</span>
-                    </li>
-                    <li class="flex items-start space-x-3">
-                        <span class="text-indigo-600 font-bold">&check;</span>
-                        <span><strong>Proses Kurasi:</strong> Seluruh artikel melalui tahap kurasi terlebih dahulu sebelum diterbitkan guna meminimalisir kesalahan dan kelalaian informasi.</span>
-                    </li>
-                    <li class="flex items-start space-x-3">
-                        <span class="text-indigo-600 font-bold">&check;</span>
-                        <span><strong>Bukan Kebenaran Mutlak:</strong> Mippedia tidak dimaksudkan sebagai pernyataan kebenaran mutlak, pengganti sumber primer, publikasi ilmiah, nasihat profesional, ataupun keputusan final atas suatu topik.</span>
-                    </li>
-                </ul>
-            </div>
-        </section>
+                <!-- Navigation Index Menu -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+                    <span class="block px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-400">Daftar Isi Portal</span>
+                    
+                    <button @click="currentTab = 'overview'" :class="currentTab === 'overview' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>1. Ikhtisar Proyek</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
+                    
+                    <button @click="currentTab = 'history'" :class="currentTab === 'history' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>2. Sejarah & Peluncuran</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
 
-        <!-- Edisi & Akses Utama -->
-        <section class="bg-gradient-to-br from-indigo-900 to-slate-900 rounded-2xl p-8 text-white space-y-6 shadow-xl">
-            <div class="max-w-xl space-y-2">
-                <h2 class="text-2xl font-bold">Jelajahi Jaringan Ensiklopedia</h2>
-                <p class="text-indigo-200 text-sm">
-                    Temukan berbagai artikel terkurasi dalam berbagai bahasa atau akses repositori data terbuka kami.
-                </p>
-            </div>
-            <div class="flex flex-wrap gap-4 pt-2">
-                <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="px-5 py-3 bg-white text-indigo-950 font-semibold rounded-xl hover:bg-indigo-50 transition text-sm">
-                    Situs Utama Mippedia
-                </a>
-                <a href="https://data.mippedia.org" target="_blank" rel="noopener noreferrer" class="px-5 py-3 bg-indigo-800/60 hover:bg-indigo-800 text-white font-semibold rounded-xl border border-indigo-700 transition text-sm">
-                    Repositori Data (data.mippedia.org)
-                </a>
-            </div>
-        </section>
+                    <button @click="currentTab = 'architecture'" :class="currentTab === 'architecture' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>3. Perangkat Lunak Wiki</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
 
-    </main>
+                    <button @click="currentTab = 'editorial'" :class="currentTab === 'editorial' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>4. Standar Rujukan Berita</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
+
+                    <button @click="currentTab = 'verification'" :class="currentTab === 'verification' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>5. Kebijakan Verifikasi</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
+
+                    <button @click="currentTab = 'disclaimer'" :class="currentTab === 'disclaimer' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>6. Penyangkalan (Disclaimer)</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
+
+                    <button @click="currentTab = 'limits'" :class="currentTab === 'limits' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>7. Batasan & Ruang Lingkup</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
+
+                    <button @click="currentTab = 'governance'" :class="currentTab === 'governance' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>8. Komunitas & Pendiri</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
+
+                    <button @click="currentTab = 'opendata'" :class="currentTab === 'opendata' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>9. Infrastruktur Data Terbuka</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
+
+                    <button @click="currentTab = 'contrib'" :class="currentTab === 'contrib' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>10. Panduan Kontributor</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
+
+                    <button @click="currentTab = 'faq'" :class="currentTab === 'faq' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>11. Tanya Jawab (FAQ)</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
+
+                    <button @click="currentTab = 'terms'" :class="currentTab === 'terms' ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'" class="w-full text-left px-3 py-2 rounded-xl text-sm transition flex items-center justify-between">
+                        <span>12. Ketentuan & Lisensi</span>
+                        <span class="text-xs text-slate-400">&rarr;</span>
+                    </button>
+                </div>
+
+                <!-- Quick External Link Card -->
+                <div class="bg-gradient-to-br from-slate-900 to-indigo-950 p-5 rounded-2xl text-white space-y-3 shadow-md">
+                    <h4 class="font-bold text-sm">Akses Langsung Ensiklopedia</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">Jelajahi ribuan artikel pengetahuan umum yang telah terkurasi di platform utama kami.</p>
+                    <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="block text-center py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs font-semibold transition">
+                        Buka mippedia.org &rarr;
+                    </a>
+                </div>
+            </aside>
+
+            <!-- Main Documentation Content Area -->
+            <main class="lg:col-span-3 space-y-6">
+
+                <!-- Breadcrumbs -->
+                <div class="bg-white px-6 py-3 rounded-xl border border-slate-200 text-xs text-slate-500 flex items-center space-x-2 shadow-xs">
+                    <a href="#overview" @click="currentTab = 'overview'" class="hover:text-indigo-600">Dokumentasi Utama</a>
+                    <span>/</span>
+                    <span class="font-semibold text-slate-800 capitalize" x-text="currentTab"></span>
+                </div>
+
+                <!-- ================= 1. IKHTISAR PROYEK ================= -->
+                <section x-show="currentTab === 'overview'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 01</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Ikhtisar & Pengantar Proyek Mippedia</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            <strong>Mippedia</strong> adalah sebuah inisiatif ensiklopedia umum berbasis kolaborasi terbuka yang menyajikan artikel-artikel pengetahuan mendalam dari berbagai macam disiplin ilmu dan topik multidisipliner. Dirancang sebagai ensiklopedia publik modern, proyek ini dibangun untuk memberikan akses informasi yang terstruktur, transparan, dan mudah diverifikasi oleh siapa saja.
+                        </p>
+                        <p>
+                            Sebagai sebuah platform ensiklopedia terbuka, seluruh isi artikel di Mippedia disusun dan disunting secara kolektif oleh para kontributor sukarela dari berbagai latar belakang. Situs ini beroperasi menggunakan perangkat lunak wiki standar industri, yang memberikan keleluasaan penuh bagi setiap pengguna untuk ikut serta membuat, mengedit, memperbaiki, hingga memperbarui cakupan informasi agar senantiasa relevan dengan perkembangan zaman.
+                        </p>
+                        <div class="bg-indigo-50/60 border-l-4 border-indigo-600 p-4 rounded-r-xl my-6">
+                            <p class="text-sm font-medium text-indigo-950 not-italic">
+                                "Mippedia dikembangkan bukan sebagai instrumen kebenaran mutlak, melainkan sebagai pusat rujukan informasi sekunder berbasis berita kredibel yang transparan dan terbuka bagi publik."
+                            </p>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 pt-4">Pilar Utama Proyek</h3>
+                        <p>
+                            Pengembangan ekosistem Mippedia didasarkan pada tiga pilar utama: kolaborasi terbuka tanpa diskriminasi, kepatuhan mutlak terhadap standar rujukan media berita kredibel, serta tata kelola komunitas yang independen. Melalui pendekatan ini, Mippedia berkomitmen untuk menjaga integritas informasi sekaligus membuka ruang partisipasi seluas-luasnya bagi masyarakat global, khususnya dalam edisi bahasa Indonesia dan bahasa Inggris.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <span class="text-xs text-slate-400">Diperbarui secara berkala oleh Tim Dokumentasi Mippedia</span>
+                        <button @click="currentTab = 'history'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: Sejarah &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 2. SEJARAH & PELUNCURAN ================= -->
+                <section x-show="currentTab === 'history'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 02</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Sejarah Perkembangan & Lini Masa Peluncuran</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            Gagasan pendirian Mippedia berawal dari kebutuhan akan platform ensiklopedia daring yang independen, gesit, dan berfokus pada standar verifikasi penulisan yang ketat. Proyek ini digagas dan didirikan oleh <strong>Rumi Haitami</strong>, yang kemudian membentuk kerangka operasional bersama para penggiat open-source dalam sebuah kolektif bernama <strong>Mippedia Community</strong>.
+                        </p>
+                        <p>
+                            Dalam perjalanannya, peluncuran platform ini dilakukan secara bertahap guna memastikan kestabilan infrastruktur peladen dan kesiapan pedoman komunitas:
+                        </p>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li><strong>5 Desember 2025:</strong> Versi bahasa Indonesia secara resmi diluncurkan ke publik, menandai dimulainya kontribusi ensiklopedis dalam ranah bahasa Indonesia.</li>
+                            <li><strong>13 Januari 2026:</strong> Versi bahasa Inggris diluncurkan untuk memperluas jangkauan rujukan dan memfasilitasi kontributor internasional dari berbagai belahan dunia.</li>
+                        </ul>
+                        <p>
+                            Sejak peluncurannya, Mippedia terus bertransformasi menjadi salah satu proyek ensiklopedia mandiri yang diperhitungkan, dengan ribuan suntingan dan artikel yang terus berkembang setiap harinya di <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="text-indigo-600 underline font-semibold">mippedia.org</a>.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'overview'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <button @click="currentTab = 'architecture'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: Perangkat Lunak Wiki &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 3. PERANGKAT LUNAK WIKI ================= -->
+                <section x-show="currentTab === 'architecture'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 03</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Arsitektur & Perangkat Lunak Wiki</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            Infrastruktur inti Mippedia didukung oleh perangkat lunak wiki modular berperforma tinggi yang dioptimalkan untuk skalabilitas ensiklopedia daring. Penggunaan teknologi wiki memungkinkan siapa saja untuk berpartisipasi aktif dalam siklus hidup pembuatan dan penyuntingan artikel.
+                        </p>
+                        <h3 class="text-xl font-bold text-slate-900 pt-2">Sistem Kontribusi Terbuka</h3>
+                        <p>
+                            Semua orang memiliki hak akses untuk mengedit, membuat, memperbaiki, ataupun memperbarui seluruh isi artikel yang ada di Mippedia. Setiap perubahan dicatat dalam riwayat suntingan (revision history) yang transparan, memungkinkan komunitas untuk melakukan audit silang terhadap validitas perubahan yang dilakukan oleh kontributor manapun.
+                        </p>
+                        <p>
+                            Infrastruktur ini dirancang agar tahan terhadap penyalahgunaan, didukung oleh sistem moderasi aktif dan perlindungan anti-spam berlapis yang dikelola langsung oleh Mippedia Community.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'history'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <button @click="currentTab = 'editorial'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: Standar Rujukan &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 4. STANDAR RUJUKAN BERITA ================= -->
+                <section x-show="currentTab === 'editorial'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 04</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Standar Rujukan Berita & Sumber Kredibel</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            Mippedia dikembangkan secara ketat sebagai sumber referensi berbasis rujukan. Ini berarti bahwa seluruh artikel dan informasi yang dimuat di Mippedia wajib bersumber dari topik yang telah dipublikasikan sebelumnya oleh media berita kredibel dan lembaga publikasi terpercaya.
+                        </p>
+                        <p>
+                            Sebagai acuan utama, kontributor diwajibkan merujuk pada pemberitaan dari media arus utama berstandar tinggi seperti <strong>Kompas</strong> serta berbagai media besar dan kredibel lainnya yang memiliki dewan redaksi profesional dan terverifikasi secara hukum.
+                        </p>
+                        <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl my-4">
+                            <p class="text-sm text-amber-900 font-medium not-italic">
+                                <strong>Aturan Ketat:</strong> Artikel yang tidak mencantumkan sumber rujukan atau berasal dari blog pribadi, media sosial tanpa verifikasi, serta sumber spekulatif akan langsung ditandai untuk dihapus atau dikurasi ulang oleh komunitas.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'architecture'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <button @click="currentTab = 'verification'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: Verifikasi &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 5. KEBIJAKAN VERIFIKASI ================= -->
+                <section x-show="currentTab === 'verification'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 05</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Proses Kurasi & Kebijakan Verifikasi</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            Meskipun Mippedia mengusung semangat kolaborasi terbuka di mana setiap orang dapat menyunting artikel, setiap halaman dan suntingan baru harus melalui prosedur kurasi internal sebelum dianggap layak sebagai bagian dari arsip ensiklopedia utama.
+                        </p>
+                        <p>
+                            Kurator dan editor komunitas secara rutin memeriksa konsistensi fakta, keakuratan kutipan rujukan, serta kesesuaian gaya penulisan ensiklopedis. Proses ini memastikan bahwa Mippedia tetap menjadi sumber informasi yang bersih dari unsur hoaks, disinformasi, maupun bias subjektif.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'editorial'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <button @click="currentTab = 'disclaimer'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: Disclaimer &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 6. PENYANGKALAN (DISCLAIMER) ================= -->
+                <section x-show="currentTab === 'disclaimer'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 06</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Penyangkalan Resmi (Disclaimer)</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            Mippedia <strong>bukan sebagai pernyataan kebenaran mutlak</strong>. Artinya, tidak semua artikel di Mippedia dapat dipastikan selalu benar, sempurna, dan akurat secara absolut.
+                        </p>
+                        <p>
+                            Walaupun semua artikel telah melalui proses kurasi terlebih dahulu sebelum penerbitan, Mippedia Community tidak memberikan jaminan mutlak bahwa seluruh isi artikel terbebas dari kelalaian, kekeliruan ketik, atau kesalahan penafsiran informasi dari sumber aslinya. Pembaca diimbau untuk selalu membandingkan informasi dengan sumber primer terkait.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'verification'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <button @click="currentTab = 'limits'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: Batasan &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 7. BATASAN & RUANG LINGKUP ================= -->
+                <section x-show="currentTab === 'limits'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 07</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Batasan Ruang Lingkup & Peringatan Penggunaan</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            Mippedia <strong>tidak dimaksudkan untuk menggantikan sumber primer</strong>, publikasi ilmiah akademik, nasihat profesional (seperti nasihat hukum, medis, keuangan, atau teknik), dan juga bukan sebagai keputusan final atas suatu topik yang kompleks.
+                        </p>
+                        <p>
+                            Segala bentuk pemanfaatan informasi yang diperoleh dari Mippedia untuk keperluan krusial sepenuhnya berada di bawah tanggung jawab pembaca. Kami sangat menyarankan agar keputusan profesional selalu didasarkan pada literatur primer dan konsultasi langsung dengan ahli di bidangnya.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'disclaimer'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <button @click="currentTab = 'governance'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: Komunitas &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 8. KOMUNITAS & PENDIRI ================= -->
+                <section x-show="currentTab === 'governance'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 08</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Tata Kelola Komunitas & Kepemimpinan</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            Mippedia dibuat oleh <strong>Rumi Haitami</strong> dan dikelola serta dioperasikan secara kolektif oleh <strong>Mippedia Community</strong>, sebuah komunitas independen yang berdedikasi pada pengembangan sumber daya pengetahuan terbuka tanpa motif profit komersial langsung.
+                        </p>
+                        <p>
+                            Struktur tata kelola komunitas memastikan bahwa keputusan penting mengenai pengembangan platform, pembaruan perangkat lunak wiki, serta peninjauan kebijakan redaksi dilakukan secara musyawarah dan transparan di antara para kontributor aktif.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'limits'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <button @click="currentTab = 'opendata'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: Open Data &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 9. INFRASTRUKTUR DATA TERBUKA ================= -->
+                <section x-show="currentTab === 'opendata'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 09</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Infrastruktur Data Terbuka & Subdomain</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            Selain portal ensiklopedia utama di <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="text-indigo-600 underline font-semibold">mippedia.org</a>, ekosistem Mippedia juga mencakup repositori data terstruktur yang diakses melalui <a href="https://data.mippedia.org" target="_blank" rel="noopener noreferrer" class="text-indigo-600 underline font-semibold">data.mippedia.org</a>.
+                        </p>
+                        <p>
+                            Infrastruktur ini dirancang untuk mendokumentasikan metadata, statistik, dan referensi silang yang dapat diakses oleh peneliti, pengembang aplikasi, maupun masyarakat luas yang membutuhkan data terstruktur berbasis wiki yang bersih dan terverifikasi.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'governance'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <button @click="currentTab = 'contrib'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: Kontributor &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 10. PANDUAN KONTRIBUTOR ================= -->
+                <section x-show="currentTab === 'contrib'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 10</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Panduan Etis Kontributor & Penyuntingan</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            Partisipasi dalam Mippedia terbuka bagi siapa saja yang mematuhi pedoman etika penyuntingan. Kontributor diharapkan menjunjung tinggi netralitas sudut pandang, menghindari konflik kepentingan, serta selalu menyertakan pranala rujukan berita yang valid pada setiap penambahan fakta baru.
+                        </p>
+                        <p>
+                            Panduan lengkap mengenai tata cara format wikitext, penambahan templat rujukan, dan aturan diskusi komunitas dapat diakses langsung di dalam platform utama Mippedia.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'opendata'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <button @click="currentTab = 'faq'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: FAQ &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 11. TANYA JAWAB (FAQ) ================= -->
+                <section x-show="currentTab === 'faq'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 11</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Pertanyaan Umum (FAQ)</h1>
+                    </div>
+                    <div class="space-y-4 text-slate-700">
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h4 class="font-bold text-slate-900">Apakah saya harus membayar untuk membaca atau mengedit di Mippedia?</h4>
+                            <p class="text-sm text-slate-600 mt-1">Tidak. Seluruh akses baca dan sunting di Mippedia bersifat gratis dan terbuka untuk umum selamanya.</p>
+                        </div>
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h4 class="font-bold text-slate-900">Bagaimana cara melaporkan kesalahan data pada artikel?</h4>
+                            <p class="text-sm text-slate-600 mt-1">Anda dapat langsung menyunting halaman tersebut dengan menyertakan rujukan berita kredibel atau mendiskusikannya melalui halaman pembicaraan artikel di mippedia.org.</p>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'contrib'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <button @click="currentTab = 'terms'" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Selanjutnya: Ketentuan &rarr;</button>
+                    </div>
+                </section>
+
+                <!-- ================= 12. KETENTUAN & LISENSI ================= -->
+                <section x-show="currentTab === 'terms'" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                    <div class="border-b border-slate-100 pb-5 space-y-2">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Dokumen Bagian 12</span>
+                        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Ketentuan Layanan & Lisensi Konten</h1>
+                    </div>
+                    <div class="prose-content text-slate-700 space-y-4">
+                        <p>
+                            Konten teks yang dipublikasikan di Mippedia dilisensikan di bawah kerangka lisensi terbuka bagi komunitas, mengizinkan redistribusi dan penyuntingan lanjutan dengan tetap mencantumkan atribusi kepada kontributor Mippedia Community.
+                        </p>
+                        <p>
+                            Dengan menggunakan situs ini, kontributor dan pembaca dianggap menyetujui seluruh ketentuan operasional, standar verifikasi, dan penyangkalan hukum yang berlaku.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button @click="currentTab = 'faq'" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-200 transition">&larr; Sebelumnya</button>
+                        <a href="https://mippedia.org" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Kunjungi Situs Utama &rarr;</a>
+                    </div>
+                </section>
+
+            </main>
+
+        </div>
+    </div>
 
     <!-- Footer -->
-    <footer class="max-w-4xl mx-auto px-6 py-12 mt-12 border-t border-slate-200 text-center text-sm text-slate-500 space-y-3">
-        <p>&copy; 2025–2026 Mippedia Community. Hak cipta dilindungi undang-undang.</p>
-        <p>
-            Portal dokumentasi resmi ini dihosting melalui <a href="https://pages.github.com" target="_blank" rel="noopener noreferrer" class="underline hover:text-slate-700">GitHub Pages</a>.
-        </p>
+    <footer class="bg-white border-t border-slate-200 mt-16 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500 space-y-4">
+            <p>&copy; 2025–2026 Mippedia Community &bull; Didirikan oleh Rumi Haitami.</p>
+            <p class="text-xs">
+                Portal dokumentasi resmi ini dihosting secara gratis dan aman melalui <a href="https://pages.github.com" target="_blank" rel="noopener noreferrer" class="underline text-indigo-600 font-medium">GitHub Pages</a> dengan standar optimasi mesin pencari tertinggi.
+            </p>
+        </div>
     </footer>
 
 </body>
