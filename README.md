@@ -1,4 +1,4 @@
-# Mippedia - Portal & Ensiklopedia Pengetahuan Terbuka
+# Mippedia - Ensiklopedia Pengetahuan Terbuka
 
 <p align="center">
   <b>Ensiklopedia umum kolaboratif yang menyajikan rujukan pengetahuan terverifikasi dari berbagai topik lintas disiplin ilmu.</b>
